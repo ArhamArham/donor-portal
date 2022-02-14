@@ -11,6 +11,28 @@
 |
 */
 
+use Illuminate\Http\JsonResponse;
+
+if (!function_exists('makeJsonResponse')) {
+    function makeJsonResponse($message, $data = [], $status = 200, $attributes = [], $messageDetails = []): JsonResponse
+    {
+        $result = 'API completed successfully';
+
+        if ($status !== 200) {
+            $result = 'an error occurred during the execution.';
+        }
+
+        return response()->json([
+            'instanceId' => '123',
+            'result' => $result,
+            'message' => $message,
+            'messageDetails' => $messageDetails,
+            'attributes' => $attributes ?: [],
+            'data' => $data ?: [],
+        ], $status, [], 1);
+    }
+}
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );

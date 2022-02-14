@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\OrganizationUser;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Auth::viaRequest('token', function ($request) {
+            if ($token = $request->bearerToken()) {
+                return OrganizationUser::where('remember_token', $token)->first();
+            }
+        });
     }
 }
